@@ -1,0 +1,64 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /TF1
+      Splitter Ratio: 0.5
+    Tree Height: 640
+  - Class: rviz_common/Selection
+    Name: Selection
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 1
+      Plane: XY
+      Color: 160; 160; 164
+      Reference Frame: <Fixed Frame>
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Show Names: true
+      Marker Scale: 1
+      Update Interval: 0
+    - Class: rviz_default_plugins/Odometry
+      Name: Odometry
+      Enabled: true
+      Topic:
+        Value: /odom
+        Depth: 10
+        Durability Policy: Volatile
+      Keep: 200
+      Position Tolerance: 0.05
+      Angle Tolerance: 0.1
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Scale: 1
+        Position:
+          Alpha: 0.3
+          Scale: 1
+  Enabled: true
+  Global Options:
+    Fixed Frame: odom
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 12
+      Focal Point:
+        X: 2
+        Y: 2
+        Z: 0
+      Pitch: 0.9
+      Yaw: 0.6

@@ -1,0 +1,8 @@
+# 走到指定点
+float64 x
+float64 y
+---
+bool    reached
+float64 total_time
+---
+float64 distance_remaining

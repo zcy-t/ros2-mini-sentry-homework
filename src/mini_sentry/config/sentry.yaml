@@ -1,0 +1,41 @@
+chassis_sim:
+  ros__parameters:
+    max_speed: 2.0       # m/s，cmd_vel 超限会被截断
+    rate: 50.0           # 积分频率
+    cmd_timeout: 0.5     # s，超过就停车
+
+referee_sim:
+  ros__parameters:
+    max_hp: 400
+    match_duration: 420.0
+    start_delay: 3.0
+    simulate_damage: true
+    hp_drop_time: 150.0
+    hp_after_damage: 140
+
+goto_server:
+  ros__parameters:
+    speed: 1.0
+    tolerance: 0.15
+    max_time: 60.0
+    control_rate: 20.0
+
+sentry_brain:
+  ros__parameters:
+    retreat_hp: 150
+    defense_time: 60.0        # 作业 1 的那条规则
+    supply_x: 0.0
+    supply_y: 0.0
+    patrol_waypoints: [1.0, 1.0, 4.0, 1.0, 4.0, 3.0, 1.0, 3.0]
+
+cmd_test:
+  ros__parameters:
+    linear_x: 0.6
+    angular_z: 0.8
+    max_speed: 2.0
+
+image_debug:
+  ros__parameters:
+    box_width: 240
+    box_height: 180
+    queue_size: 1

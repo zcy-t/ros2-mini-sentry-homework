@@ -1,0 +1,1131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROS 2 基础 · 知识点清单</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316212C'/%3E%3Ccircle cx='10' cy='16' r='4' fill='%232E84DB'/%3E%3Ccircle cx='23' cy='10' r='3' fill='%23E8801C'/%3E%3Ccircle cx='23' cy='23' r='3' fill='%2317795A'/%3E%3Cpath d='M14 16h6M20 16l-1 -6M20 16l-1 7' stroke='%23D5DEE9' stroke-width='1.6' fill='none'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --paper:#EDF1F6; --card:#FFFFFF; --ink:#16212C; --muted:#5D6B7A; --line:#D3DCE7;
+  --blue:#1F63B8; --blue-soft:#E8F0FA; --amber:#B25E0C; --amber-soft:#FBEFE0;
+  --green:#17795A; --green-soft:#E6F4EE; --red:#AE342B; --red-soft:#FAEAE8;
+  --mono:'JetBrains Mono','Consolas','Courier New',monospace;
+  --sans:'Noto Sans SC','Microsoft YaHei',system-ui,sans-serif;
+  --serif:'Noto Serif SC','Songti SC',serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{
+  margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:16.5px; line-height:1.85;
+  background-image:linear-gradient(rgba(31,99,184,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(31,99,184,.045) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.wrap{max-width:1320px;margin:0 auto;padding:0 28px 96px;display:grid;grid-template-columns:236px minmax(0,1fr);gap:52px}
+/* ---------- 左栏 ---------- */
+.rail{position:sticky;top:0;align-self:start;height:100vh;padding:38px 0 32px;display:flex;flex-direction:column;gap:22px;border-right:1px solid var(--line)}
+.rail .brand{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--muted);line-height:1.7}
+.rail .brand b{display:block;color:var(--ink);font-size:13px;letter-spacing:.08em}
+.rail nav{display:flex;flex-direction:column;gap:1px;font-size:14px}
+.rail nav a{color:var(--muted);text-decoration:none;padding:7px 10px 7px 12px;border-left:2px solid transparent;transition:color .15s,border-color .15s,background .15s}
+.rail nav a span{font-family:var(--mono);font-size:11px;margin-right:9px;color:#9AA9B8}
+.rail nav a:hover{color:var(--ink);background:#fff}
+.rail nav a.on{color:var(--ink);border-left-color:var(--blue);background:#fff}
+.rail nav a.on span{color:var(--blue)}
+.rail .foot{margin-top:auto;font-family:var(--mono);font-size:11px;color:#93A2B1;line-height:1.9;border-top:1px solid var(--line);padding-top:14px}
+/* ---------- 头部 ---------- */
+main{min-width:0;padding-top:38px}
+header{position:relative;padding:0 0 30px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--blue);margin:0 0 18px}
+h1{margin:0;font-family:var(--serif);font-weight:900;font-size:clamp(38px,5.4vw,66px);line-height:1.08;letter-spacing:-.015em}
+h1 em{font-style:normal;color:var(--blue)}
+.sub{margin:16px 0 0;max-width:44em;color:var(--muted);font-size:16px}
+.meta{display:flex;flex-wrap:wrap;gap:0;margin:26px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.meta div{display:flex;align-items:baseline;gap:10px;padding:9px 20px 9px 0;margin-right:20px;border-right:1px solid var(--line);font-size:13.5px}
+.meta div:last-child{border-right:0}
+.meta b{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:400}
+/* ---------- 知识地图 ---------- */
+.map{margin:44px 0 8px}
+.map-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:6px}
+.map-h h2{font-family:var(--serif);font-size:26px;margin:0}
+.map-h span{font-size:13.5px;color:var(--muted)}
+.spine{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:22px;border-top:2px solid var(--ink)}
+.stage{padding:20px 18px 22px 0;position:relative}
+.stage:before{content:"";position:absolute;top:-7px;left:0;width:11px;height:11px;border:2px solid var(--ink);background:var(--card);border-radius:50%}
+.stage .no{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--blue)}
+.stage h3{margin:4px 0 10px;font-size:18px;font-weight:700;line-height:1.35}
+.stage ul{margin:0;padding:0;list-style:none;font-size:13px;color:var(--muted);line-height:1.75}
+.stage ul li{padding:3px 0;border-bottom:1px dotted var(--line)}
+.stage ul li:before{content:"—";color:#ABB8C5;margin-right:6px;font-family:var(--mono)}
+/* ---------- 章节 ---------- */
+section.part{margin-top:58px}
+.part-hd{display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;padding-bottom:12px;border-bottom:1px solid var(--ink)}
+.part-no{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--blue);padding-bottom:4px}
+.part-hd h2{margin:0;font-family:var(--serif);font-size:clamp(26px,3vw,34px);font-weight:900;line-height:1.2}
+.part-hd .note{margin-left:auto;font-size:13px;color:var(--muted);max-width:24em;text-align:right}
+.item{margin-top:34px;display:grid;grid-template-columns:64px minmax(0,1fr);gap:0}
+.item > *{min-width:0}
+.tw{max-width:100%}
+pre{max-width:100%}
+.item .idx{font-family:var(--mono);font-size:12px;color:#9AA9B8;padding-top:7px}
+.item h3{margin:0 0 12px;font-size:20px;font-weight:700;line-height:1.5}
+.item h3 code{font-size:.95em}
+.item p{margin:10px 0;max-width:62em}
+.item ul,.item ol{margin:10px 0;padding-left:1.25em;max-width:62em}
+.item li{margin:5px 0}
+.item li::marker{color:#9AA9B8}
+code{font-family:var(--mono);font-size:13.5px;background:#E4EAF1;padding:1px 5px;border-radius:2px;word-break:break-word}
+pre{margin:12px 0;padding:15px 17px;background:#F8FAFD;border:1px solid var(--line);overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.72;tab-size:2}
+pre code{background:none;padding:0;font-size:inherit}
+pre .c{color:#8494A3}
+pre .k{color:#1F63B8}
+pre .s{color:#17795A}
+pre .p{color:#B25E0C;font-weight:700}
+pre .e{color:#AE342B;font-weight:700}
+/* ---------- 表格 ---------- */
+.tw{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;table-layout:fixed;min-width:520px;font-size:14.5px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.7}
+th{background:#F1F5FA;font-weight:700;font-size:13.5px}
+td.mono,th.mono{font-family:var(--mono);font-size:12.5px;word-break:break-all}
+.ok{color:var(--green);font-weight:700}
+.ng{color:var(--red);font-weight:700}
+/* ---------- 提示块 ---------- */
+.box{margin:16px 0;padding:13px 17px 14px;border:1px solid var(--line);background:var(--card);font-size:14.5px;line-height:1.75}
+.box .tag{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;padding:1px 7px;margin-right:9px;vertical-align:1px;border:1px solid currentColor}
+.box.warn{border-color:#E3C69E;background:var(--amber-soft)} .box.warn .tag{color:var(--amber)}
+.box.good{border-color:#B9D9CB;background:var(--green-soft)} .box.good .tag{color:var(--green)}
+.box.bad{border-color:#E2BBB6;background:var(--red-soft)} .box.bad .tag{color:var(--red)}
+.box.plain{background:var(--blue-soft);border-color:#BFD3E9} .box.plain .tag{color:var(--blue)}
+.box p{margin:0;max-width:none}
+/* ---------- 命令速查 ---------- */
+.cmdgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:18px}
+.cmdgrid table{min-width:0}
+.cmdgrid td.mono{font-size:12.5px}
+/* ---------- 自测 ---------- */
+.qlist{counter-reset:q;margin:16px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 34px}
+.qlist li{counter-increment:q;padding:12px 0 12px 34px;border-bottom:1px dotted var(--line);position:relative;font-size:15px}
+.qlist li:before{content:counter(q,decimal-leading-zero);position:absolute;left:0;top:12px;font-family:var(--mono);font-size:11px;color:var(--blue)}
+footer{margin-top:64px;padding-top:20px;border-top:2px solid var(--ink);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.06em}
+@media (max-width:1080px){
+  .wrap{grid-template-columns:1fr;gap:0;padding:0 20px 72px}
+  .rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:22px 0 10px;gap:14px}
+  .rail nav{flex-direction:row;flex-wrap:wrap;gap:4px;font-size:13px}
+  .rail nav a{border-left:0;border-bottom:2px solid transparent;padding:10px 11px;min-height:44px;display:inline-flex;align-items:center}
+  .rail nav a span{font-size:12px}
+  .rail .brand{font-size:12.5px}
+  .meta div{font-size:14px}
+  .rail nav a.on{border-bottom-color:var(--blue)}
+  .rail .foot{display:none}
+  main{padding-top:26px}
+  .spine{grid-template-columns:repeat(2,minmax(0,1fr));border-top:0}
+  .stage{border-top:2px solid var(--ink);padding:16px 14px 16px 0}
+  .item{grid-template-columns:1fr;gap:0}
+  .item .idx{padding-top:0;font-size:11.5px}
+  table{min-width:0;font-size:13.5px}
+  th,td{padding:8px 9px}
+  td.mono,th.mono{font-size:11.8px}
+  .cmdgrid,.qlist{grid-template-columns:1fr}
+  .part-hd .note{margin-left:0;text-align:left;max-width:none}
+}
+@media (max-width:640px){
+  .spine{grid-template-columns:1fr}
+  .stage{padding-right:0}
+}
+@media (max-width:520px){
+  body{font-size:16px}
+  .stage{padding-right:10px}
+  .meta div{padding-right:12px;margin-right:12px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="top">
+
+<aside class="rail">
+  <div class="brand"><b>ROS 2 基础</b>知识点清单<br>RoboMaster 算法组</div>
+  <nav id="nav">
+    <a href="#map"><span>00</span>知识地图</a>
+    <a href="#p1"><span>01</span>环境与工具</a>
+    <a href="#p2"><span>02</span>节点与通信</a>
+    <a href="#p3"><span>03</span>参数与 launch</a>
+    <a href="#p4"><span>04</span>TF 坐标变换</a>
+    <a href="#p5"><span>05</span>调试工具</a>
+    <a href="#cmd"><span>06</span>命令速查</a>
+    <a href="#err"><span>07</span>易错点</a>
+    <a href="#test"><span>08</span>自测</a>
+  </nav>
+  <div class="foot">整理自讲义 40 页<br>Ubuntu 22.04 · Humble<br>demo：mini_sentry</div>
+</aside>
+
+<main>
+<header>
+  <p class="eyebrow">ROBOMASTER / ALGORITHM TEAM / LECTURE NOTES</p>
+  <h1>ROS 2 <em>基础</em><br>知识点清单</h1>
+  <p class="sub">只覆盖比赛里天天用的那一套：节点、话题、参数、launch、TF、调试工具。每个知识点按「是什么 → 怎么写 → 坑在哪」整理，可以直接当复习提纲用。</p>
+  <div class="meta">
+    <div><b>范围</b>5 个部分</div>
+    <div><b>环境</b>Ubuntu 22.04 + Humble</div>
+    <div><b>载体</b>迷你哨兵 demo</div>
+    <div><b>不含</b>Nav2 / LIO / 识别算法 / 电控</div>
+  </div>
+</header>
+
+<!-- ================= 知识地图 ================= -->
+<section class="map" id="map">
+  <div class="map-h"><h2>一条主线，五个部分</h2><span>后面每一节都挂在这条线上，复习时按顺序过一遍即可。</span></div>
+  <div class="spine">
+    <div class="stage">
+      <div class="no">PART 1 / 8 min</div>
+      <h3>环境与工具</h3>
+      <ul><li>source 与 DOMAIN_ID</li><li>工作空间 / 功能包</li><li>build → source → run</li></ul>
+    </div>
+    <div class="stage">
+      <div class="no">PART 2 / 30 min</div>
+      <h3>节点与通信</h3>
+      <ul><li>发布 / 订阅 / 执行器</li><li>自定义消息、QoS</li><li>服务、动作</li></ul>
+    </div>
+    <div class="stage">
+      <div class="no">PART 3 / 15 min</div>
+      <h3>参数与 launch</h3>
+      <ul><li>yaml 与在线调参</li><li>一条命令起整车</li><li>组件与零拷贝</li></ul>
+    </div>
+    <div class="stage">
+      <div class="no">PART 4 / 15 min</div>
+      <h3>TF 坐标变换</h3>
+      <ul><li>TF 树、map 与 odom</li><li>发布 / 按时间查询</li><li>报错怎么查</li></ul>
+    </div>
+    <div class="stage">
+      <div class="no">PART 5 / 12 min</div>
+      <h3>调试工具</h3>
+      <ul><li>RViz2、rqt</li><li>日志、ros2 bag</li><li>六步排查清单</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Part 1 ================= -->
+<section class="part" id="p1">
+  <div class="part-hd">
+    <div class="part-no">PART 1</div>
+    <h2>环境与工具</h2>
+    <div class="note">这一部分决定「命令能不能跑起来」，90% 的新手问题都在这里。</div>
+  </div>
+
+  <div class="item">
+    <div class="idx">1.1</div>
+    <div>
+      <h3>source：每个新终端都要做一次</h3>
+      <p>ROS 2 的可执行文件、环境变量都挂在 <code>/opt/ros/humble</code> 下，新终端默认不认识 <code>ros2</code> 命令，必须先 source。</p>
+<pre><code><span class="p">$</span> ros2
+<span class="e">ros2: command not found</span>
+<span class="p">$</span> source /opt/ros/humble/setup.bash
+<span class="p">$</span> ros2 topic list
+/parameter_events
+/rosout</code></pre>
+      <ul>
+        <li>source 只对<b>当前终端</b>有效，开新终端要再做一次。</li>
+        <li>顺序：先 source 系统 <code>/opt/ros/humble</code>，再 source 自己工作空间的 <code>install/setup.bash</code>。</li>
+        <li>同名包，<b>后 source 的覆盖先 source 的</b>。</li>
+        <li>写进 <code>~/.bashrc</code> 可自动执行；但<b>不要把两个发行版都写进去</b>。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">1.2</div>
+    <div>
+      <h3>ROS_DOMAIN_ID：别和别人串话题</h3>
+      <p>ROS 2 默认自动发现<b>同一局域网</b>里所有电脑的节点。全实验室都用默认的 <code>0</code> 时，别人发的 <code>/cmd_vel</code> 你的底盘也会收到——这就是「车自己在乱跑」的经典原因。</p>
+<pre><code>export ROS_DOMAIN_ID=17       <span class="c"># 每人一个，0 ~ 101</span>
+export ROS_LOCALHOST_ONLY=1   <span class="c"># 自己练习：只在本机通信</span></code></pre>
+      <ul>
+        <li>车上的电脑也设一个固定 DOMAIN_ID，调车时不串。</li>
+        <li><code>source</code>、<code>export</code> 都写进 <code>~/.bashrc</code>，新终端自动生效。</li>
+        <li>Jazzy 起推荐用 <code>ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST</code> 代替 LOCALHOST_ONLY。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">1.3</div>
+    <div>
+      <h3>工作空间与功能包</h3>
+      <p>工作空间就是一个文件夹，标准结构只有 <code>src/</code> 是你写的，其余三个由 colcon 生成。</p>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:26%"><col style="width:28%"><col style="width:46%"></colgroup>
+          <tr><th>目录 / 文件</th><th>是什么</th><th>要点</th></tr>
+          <tr><td class="mono">src/</td><td>源码</td><td><b>只有它进 git</b>；真实比赛工程里常有十几个包</td></tr>
+          <tr><td class="mono">build/</td><td>编译中间文件</td><td>可随时删除重编</td></tr>
+          <tr><td class="mono">install/</td><td>编译结果</td><td><b>source 的是它</b>，不是 src</td></tr>
+          <tr><td class="mono">log/</td><td>编译日志</td><td>编译失败先翻这里</td></tr>
+          <tr><td class="mono">package.xml</td><td>包名、依赖</td><td>决定 colcon 的编译顺序</td></tr>
+          <tr><td class="mono">CMakeLists.txt</td><td>怎么编译</td><td>可执行文件、安装规则都写这里</td></tr>
+        </table>
+      </div>
+<pre><code>cd ~/mini_sentry_ws/src
+ros2 pkg create my_pkg \
+  --build-type ament_cmake \
+  --dependencies rclcpp geometry_msgs</code></pre>
+      <div class="box bad"><span class="tag">不要</span><p>把 <code>build/ install/ log/</code> 提交到 git：它们能随时重新生成，提交了只会天天冲突。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">1.4</div>
+    <div>
+      <h3>colcon build：改代码 → 编译 → source → 运行</h3>
+      <p>这个顺序是本课出现频率最高的一条操作习惯。少做一步，症状各不相同。</p>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:40%"><col style="width:60%"></colgroup>
+          <tr><th>命令（在工作空间根目录执行）</th><th>作用</th></tr>
+          <tr><td class="mono">colcon build</td><td>编译所有包</td></tr>
+          <tr><td class="mono">colcon build --packages-select mini_sentry</td><td>只编一个包，改一个包时最常用</td></tr>
+          <tr><td class="mono">colcon build --symlink-install</td><td>软链接安装：改 launch / yaml 不用重编</td></tr>
+          <tr><td class="mono">source install/setup.bash</td><td>让当前终端找到新编出来的包</td></tr>
+          <tr><td class="mono">rm -rf build install log</td><td>彻底重来（编译状态莫名其妙坏掉时）</td></tr>
+        </table>
+      </div>
+      <p>编译顺序不用自己排：colcon 读 <code>package.xml</code> 的依赖，先编 <code>interfaces</code> 再编用到它的包。编译完要在<b>当前终端</b>重新 source 一次，否则新包不可见。</p>
+      <div class="box warn"><span class="tag">易错</span><p>新终端报 <code>Package 'mini_sentry' not found</code>：不是包没编，是这个终端没 source。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">1.5</div>
+    <div>
+      <h3>改了什么需要重新 build</h3>
+      <p>用 <code>--symlink-install</code> 后，配置文件改动可以直接生效，但代码和构建规则不行。</p>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
+          <tr><th>改动</th><th>普通 build</th><th>symlink-install</th></tr>
+          <tr><td>.cpp / .hpp 代码</td><td class="ng">要</td><td class="ng">要</td></tr>
+          <tr><td>launch .py / yaml / rviz</td><td class="ng">要</td><td class="ok">不用</td></tr>
+          <tr><td>新增文件、改 CMakeLists</td><td class="ng">要</td><td class="ng">要</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Part 2 ================= -->
+<section class="part" id="p2">
+  <div class="part-hd">
+    <div class="part-no">PART 2</div>
+    <h2>节点与通信</h2>
+    <div class="note">本课最重的一块：三种通信方式 + 一个最容易被忽视的 QoS。</div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.1</div>
+    <div>
+      <h3>节点、话题、消息的三句话定义</h3>
+      <ul>
+        <li><b>节点</b>：只负责一件事的程序。节点之间<b>不直接调函数</b>，只交换消息。</li>
+        <li><b>话题</b>：名字 + 类型。<code>/cmd_vel</code> 靠名字对上号，两边消息类型必须一致。</li>
+        <li><b>话题通信</b>：单向、多对多，发完就走，不管谁在听。适合<b>持续的数据流</b>：图像、点云、速度。</li>
+      </ul>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:24%"><col style="width:26%"><col style="width:50%"></colgroup>
+          <tr><th>常用消息</th><th>含义</th><th>典型话题</th></tr>
+          <tr><td class="mono">sensor_msgs/Image</td><td>图像</td><td>/image_raw</td></tr>
+          <tr><td class="mono">sensor_msgs/PointCloud2</td><td>点云</td><td>/livox/lidar</td></tr>
+          <tr><td class="mono">sensor_msgs/Imu</td><td>姿态、角速度、加速度</td><td>/livox/imu</td></tr>
+          <tr><td class="mono">geometry_msgs/Twist</td><td>速度指令</td><td>/cmd_vel</td></tr>
+          <tr><td class="mono">nav_msgs/Odometry</td><td>里程计位姿 + 速度</td><td>/odom</td></tr>
+        </table>
+      </div>
+      <div class="box plain"><span class="tag">关键</span><p>带 <code>header</code> 的消息里，<code>stamp</code> 是<b>采集时刻</b>，<code>frame_id</code> 是<b>在哪个坐标系里测的</b>。这两个字段后面 TF 全靠它们，不要随手填 <code>now()</code> 或空。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.2</div>
+    <div>
+      <h3>写一个发布者：往 /cmd_vel 发速度</h3>
+      <p>四件事：继承 <code>rclcpp::Node</code>、构造函数里起节点名、建发布者、用定时器周期发。</p>
+<pre><code><span class="k">class</span> CmdTest : <span class="k">public</span> rclcpp::Node {
+<span class="k">public</span>:
+  CmdTest() : Node(<span class="s">"cmd_test"</span>) {                  <span class="c">// 节点名</span>
+    pub_ = create_publisher&lt;Twist&gt;(<span class="s">"cmd_vel"</span>, 10);  <span class="c">// 话题名、队列深度</span>
+    timer_ = create_wall_timer(100ms, [<span class="k">this</span>]() {  <span class="c">// 每 100 ms</span>
+      Twist cmd;
+      cmd.linear.x  = 0.5;   <span class="c">// 前进 0.5 m/s</span>
+      cmd.angular.z = 0.5;   <span class="c">// 逆时针 0.5 rad/s</span>
+      pub_-&gt;publish(cmd);
+    });
+  }
+};</code></pre>
+      <ul>
+        <li><code>rclcpp::spin(node)</code>：等事件、调回调，直到 Ctrl+C；末尾 <code>rclcpp::shutdown()</code>。</li>
+        <li>打日志用 <code>RCLCPP_INFO</code>，自动带节点名和时间戳。</li>
+        <li>不写代码也能发：<code>ros2 topic pub --rate 10 /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5}, angular: {z: 0.5}}"</code>。</li>
+        <li>单位统一国际单位：<b>米、秒、弧度</b>；<code>linear.x</code> 向前 m/s，<code>angular.z</code> 逆时针 rad/s。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.3</div>
+    <div>
+      <h3>新加一个节点，要改三个地方</h3>
+      <p>漏掉任何一处，症状都不一样——这是「编译过了却跑不起来」的主要来源。</p>
+<pre><code><span class="c"># ① package.xml：声明依赖</span>
+&lt;depend&gt;rclcpp&lt;/depend&gt;
+&lt;depend&gt;geometry_msgs&lt;/depend&gt;
+
+<span class="c"># ② ③ CMakeLists.txt</span>
+find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
+add_executable(cmd_test src/cmd_test.cpp)               <span class="c"># ② 编译</span>
+target_link_libraries(cmd_test rclcpp::rclcpp ${geometry_msgs_TARGETS})
+
+install(TARGETS cmd_test DESTINATION lib/${PROJECT_NAME}) <span class="c"># ③ 安装</span></code></pre>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:22%"><col style="width:78%"></colgroup>
+          <tr><th>漏了哪步</th><th>现象</th></tr>
+          <tr><td>① 依赖</td><td>colcon 排不对编译顺序，时好时坏地报「找不到接口包」</td></tr>
+          <tr><td>② 编译</td><td>根本没生成可执行文件</td></tr>
+          <tr><td>③ 安装</td><td>编译成功，<code>ros2 run</code> 却报 <code>No executable found</code></td></tr>
+        </table>
+      </div>
+      <p>多用一个包（<code>sensor_msgs</code>、<code>cv_bridge</code>、自己的接口包…），就要<b>同时</b>加 <code>depend</code>、<code>find_package</code>、<code>target_link_libraries</code>。老教程的 <code>ament_target_dependencies()</code> 从 Kilted 起已弃用，<code>target_link_libraries</code> 在 Humble～Lyrical 都能用。</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.4</div>
+    <div>
+      <h3>写一个订阅者：底盘仿真</h3>
+<pre><code>cmd_sub_ = create_subscription&lt;geometry_msgs::msg::Twist&gt;(
+  <span class="s">"cmd_vel"</span>, 10,
+  [<span class="k">this</span>](geometry_msgs::msg::Twist::SharedPtr msg) {
+    cmd_ = *msg;                 <span class="c">// 回调里只保存</span>
+    last_cmd_time_ = now();
+  });
+odom_pub_ = create_publisher&lt;nav_msgs::msg::Odometry&gt;(<span class="s">"odom"</span>, 10);
+timer_ = create_wall_timer(20ms, [<span class="k">this</span>]() { update(); }); <span class="c">// 50 Hz</span></code></pre>
+      <ul>
+        <li>签名：<code>create_subscription&lt;类型&gt;(话题名, 深度, 回调)</code>；每来一条消息，spin 调一次回调。</li>
+        <li>回调里只<b>保存</b>最新指令，真正的积分放在固定频率定时器里做——这决定了控制频率稳定。</li>
+        <li>同一个节点可以既订阅又发布（这里收 <code>/cmd_vel</code>、发 <code>/odom</code>）。</li>
+        <li>积分公式：<code>x += (vx·cosψ − vy·sinψ)·dt</code>，<code>y += (vx·sinψ + vy·cosψ)·dt</code>，<code>ψ += wz·dt</code>。</li>
+      </ul>
+      <div class="box good"><span class="tag">推荐</span><p><b>超时停车</b>：超过 0.5 s 没收到速度指令就把 vx、vy、wz 清零。上游导航崩了，车也不会一直往前冲。</p></div>
+      <div class="box bad"><span class="tag">禁止</span><p>默认单线程：一个回调没返回，其它回调全在排队。回调里<b>不要 sleep、不要死循环、不要同步等别人回复</b>。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.5</div>
+    <div>
+      <h3>收图像：自瞄节点的入口</h3>
+<pre><code>img_sub_ = create_subscription&lt;Image&gt;(
+  <span class="s">"image_raw"</span>, rclcpp::SensorDataQoS(),
+  [<span class="k">this</span>](Image::ConstSharedPtr msg) {
+    cv::Mat img = cv_bridge::toCvShare(msg, <span class="s">"bgr8"</span>)-&gt;image; <span class="c">// 不拷贝像素</span>
+    Armors out = detect(img);
+    out.header = msg-&gt;header;   <span class="c">// 时间戳、frame_id 原样带下去</span>
+    armors_pub_-&gt;publish(out);
+  });</code></pre>
+      <ul>
+        <li>图像就是一个普通话题：相机驱动发布，识别节点订阅。</li>
+        <li><code>cv_bridge</code> 负责 ROS 的 Image ↔ OpenCV 的 <code>cv::Mat</code> 互转。</li>
+        <li>结果<b>必须带上图像的 header</b>：之后查 TF 要的是「拍这张图那一刻」的云台姿态。</li>
+        <li>依赖：package.xml 加 <code>cv_bridge</code>、<code>sensor_msgs</code>；CMake 加 <code>find_package(cv_bridge)</code> 并链接 <code>cv_bridge::cv_bridge</code>。</li>
+      </ul>
+      <div class="box warn"><span class="tag">易错</span><p>识别比相机慢时，旧图会在队列里排队。宁可丢帧也别处理过时的图：<code>SensorDataQoS().keep_last(1)</code>。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.6</div>
+    <div>
+      <h3>回调与执行器：一个回调卡住，整个节点都卡住</h3>
+      <p><code>spin</code> 背后是<b>执行器</b>。默认只有一个线程，回调一个一个排队执行：图像回调每帧 28 ms，定时器每 10 ms 就该跑一次——单线程下定时器会在队列里等（讲义里画的「红线」就是这个现象）。</p>
+<pre><code><span class="k">auto</span> img_group   = create_callback_group(CallbackGroupType::MutuallyExclusive);
+<span class="k">auto</span> timer_group = create_callback_group(CallbackGroupType::MutuallyExclusive);
+
+SubscriptionOptions opt;
+opt.callback_group = img_group;
+img_sub_ = create_subscription&lt;Image&gt;(<span class="s">"image_raw"</span>, SensorDataQoS(), cb, opt);
+timer_   = create_wall_timer(10ms, on_timer, timer_group);
+
+<span class="c">// main() 换成多线程执行器</span>
+rclcpp::executors::MultiThreadedExecutor exec;
+exec.add_node(node);
+exec.spin();</code></pre>
+      <ul>
+        <li>同一个<b>回调组</b>里的回调不会同时跑；不同组 + 多线程执行器才能并行。</li>
+        <li>并行之后，两个回调读写的同一个变量要用 <code>std::mutex</code> 保护。</li>
+        <li>判断原则：回调都很快时，默认单线程就够用，别为了「显得高级」上多线程。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.7</div>
+    <div>
+      <h3>命令行看话题：list → hz → echo → info</h3>
+<pre><code><span class="p">$</span> ros2 topic list          <span class="c"># 有没有这个话题</span>
+<span class="p">$</span> ros2 topic hz /odom      <span class="c"># 频率对不对</span>
+average rate: 50.003
+  min: 0.019s max: 0.021s std dev: 0.00041s
+<span class="p">$</span> ros2 topic info /cmd_vel
+Type: geometry_msgs/msg/Twist
+Publisher count: 1
+Subscription count: 1
+<span class="p">$</span> ros2 topic echo /odom --once   <span class="c"># 数值对不对</span></code></pre>
+      <p>这个顺序就是排查数据链路的固定动作：<b>有没有 → 频率对不对 → 数值对不对</b>。</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.8</div>
+    <div>
+      <h3>自定义消息：把裁判系统数据搬进 ROS</h3>
+<pre><code><span class="c"># mini_sentry_interfaces/msg/GameStatus.msg</span>
+uint8 PROGRESS_NOT_STARTED=0   <span class="c"># 常量全大写</span>
+uint8 PROGRESS_RUNNING=4
+
+uint8  game_progress
+uint16 stage_remain_time       <span class="c"># 秒</span>
+uint16 current_hp
+uint16 maximum_hp</code></pre>
+<pre><code>find_package(rosidl_default_generators REQUIRED)
+rosidl_generate_interfaces(${PROJECT_NAME}
+  <span class="s">"msg/GameStatus.msg"</span> <span class="s">"srv/SetMode.srv"</span> <span class="s">"action/GoToPoint.action"</span>)
+ament_export_dependencies(rosidl_default_runtime)</code></pre>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:34%"><col style="width:66%"></colgroup>
+          <tr><th>package.xml 要加的</th><th>什么时候需要</th></tr>
+          <tr><td class="mono">&lt;buildtool_depend&gt;rosidl_default_generators</td><td>固定要加</td></tr>
+          <tr><td class="mono">&lt;exec_depend&gt;rosidl_default_runtime</td><td>固定要加</td></tr>
+          <tr><td class="mono">&lt;member_of_group&gt;rosidl_interface_packages</td><td>固定要加</td></tr>
+          <tr><td class="mono">&lt;depend&gt;action_msgs</td><td>只有 .action 文件时才加</td></tr>
+        </table>
+      </div>
+      <ul>
+        <li>命名规则：文件名大驼峰 <code>GameStatus.msg</code> → 头文件 <code>game_status.hpp</code>；字段小写 + 下划线；常量全大写。不符合直接编译报错。</li>
+        <li><b>接口单独放一个包</b>：识别、决策、可视化都依赖它，互相之间不会循环依赖。</li>
+        <li>发送方和接收方按字段名读写，不用关心字节怎么排。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.9</div>
+    <div>
+      <h3>QoS：明明有数据，为什么收不到</h3>
+      <p>相机驱动按传感器惯例用 <code>SensorDataQoS</code> 发布（BEST_EFFORT），你写订阅时只写了个数字 <code>10</code>（RELIABLE）。<code>hz</code> 显示 100 Hz，你的回调却一次都没进，启动日志里还有一句 WARN：</p>
+<pre><code>[WARN] [detector]: New publisher discovered on topic '/image_raw',
+offering incompatible QoS. No messages will be received from it.
+Last incompatible policy: RELIABILITY</code></pre>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:36%"><col style="width:34%"><col style="width:30%"></colgroup>
+          <tr><th>写法</th><th>可靠性</th><th>队列深度</th></tr>
+          <tr><td class="mono">只写数字 10</td><td class="mono">RELIABLE</td><td>10</td></tr>
+          <tr><td class="mono">SensorDataQoS()</td><td class="mono">BEST_EFFORT</td><td>5</td></tr>
+        </table>
+      </div>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:36%"><col style="width:36%"><col style="width:28%"></colgroup>
+          <tr><th>发布者提供</th><th>订阅者要求</th><th>能连上？</th></tr>
+          <tr><td class="mono">RELIABLE</td><td class="mono">RELIABLE</td><td class="ok">能</td></tr>
+          <tr><td class="mono">RELIABLE</td><td class="mono">BEST_EFFORT</td><td class="ok">能</td></tr>
+          <tr><td class="mono">BEST_EFFORT</td><td class="mono">BEST_EFFORT</td><td class="ok">能</td></tr>
+          <tr><td class="mono">BEST_EFFORT</td><td class="mono">RELIABLE</td><td class="ng">不能</td></tr>
+        </table>
+      </div>
+      <div class="box plain"><span class="tag">记住</span><p><b>订阅者的要求不能高于发布者。</b>订阅传感器数据就用 <code>SensorDataQoS()</code>；查发布者实际用的 QoS 用 <code>ros2 topic info -v</code>。命令行工具用兼容性更宽的 QoS，所以 <code>hz</code> 能收到不代表你的节点能收到。</p></div>
+      <p>RViz2 里点云、图像不显示，先找 Reliability 改成 <b>Best Effort</b>。</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.10</div>
+    <div>
+      <h3>QoS 持久性：后启动的节点能不能拿到之前的消息</h3>
+      <p><code>static_transform_publisher</code> 只在启动时发一次 <code>/tf_static</code>，10 分钟后才打开 RViz2 却还能看到——因为它用 <b>TRANSIENT_LOCAL</b> 发布：DDS 替后来的订阅者留着最近几条。</p>
+<pre><code><span class="k">auto</span> qos = rclcpp::QoS(1).transient_local();
+pub_ = create_publisher&lt;OccupancyGrid&gt;(<span class="s">"map"</span>, qos);
+sub_ = create_subscription&lt;OccupancyGrid&gt;(<span class="s">"map"</span>, qos, cb); <span class="c">// 订阅端也要写</span></code></pre>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:20%"><col style="width:32%"><col style="width:48%"></colgroup>
+          <tr><th>策略</th><th>取值</th><th>怎么选</th></tr>
+          <tr><td>可靠性</td><td class="mono">RELIABLE / BEST_EFFORT</td><td>传感器流用 BEST_EFFORT；指令、结果用 RELIABLE</td></tr>
+          <tr><td>历史深度</td><td class="mono">KEEP_LAST(n)</td><td>只要最新写 1；怕丢就大一些</td></tr>
+          <tr><td>持久性</td><td class="mono">VOLATILE / TRANSIENT_LOCAL</td><td>只发一次的数据（地图、机器人描述、静态 TF）用 TRANSIENT_LOCAL</td></tr>
+        </table>
+      </div>
+      <div class="box warn"><span class="tag">易错</span><p>持久性也要兼容：发布者 VOLATILE、订阅者要求 TRANSIENT_LOCAL，同样连不上。订阅端忘了写 <code>qos</code>，就只能收到之后发的消息。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.11</div>
+    <div>
+      <h3>服务：一问一答</h3>
+      <p>很快能做完、需要知道成功没有的事：切换模式、保存地图、清空代价地图。</p>
+<pre><code><span class="c"># SetMode.srv：--- 上面是请求，下面是响应</span>
+uint8 mode
+---
+bool   success
+string message
+
+<span class="p">$</span> ros2 service call /set_mode mini_sentry_interfaces/srv/SetMode <span class="s">"{mode: 1}"</span>
+response:
+  success=True, message='已切换到 待命'</code></pre>
+      <ul>
+        <li>服务端 <code>create_service&lt;SetMode&gt;(名字, 回调(req, res))</code>：拿到请求、填好响应，<b>return 就算回复了</b>。</li>
+        <li><code>.srv</code> 里的常量（<code>PATROL</code>、<code>HOLD</code>、<code>RETREAT</code>）生成在 <code>SetMode::Request</code> 里。</li>
+        <li>服务端回调要快；要跑好几秒的事用动作。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.12</div>
+    <div>
+      <h3>服务客户端：异步发，别在回调里干等</h3>
+<pre><code>client_ = create_client&lt;SetMode&gt;(<span class="s">"set_mode"</span>);
+<span class="k">if</span> (!client_-&gt;service_is_ready()) <span class="k">return</span>;   <span class="c">// 服务端可能还没起来</span>
+
+<span class="k">auto</span> req = std::make_shared&lt;SetMode::Request&gt;();
+req-&gt;mode = SetMode::Request::HOLD;
+client_-&gt;async_send_request(req, [<span class="k">this</span>](rclcpp::Client&lt;SetMode&gt;::SharedFuture f) {
+  RCLCPP_INFO(get_logger(), <span class="s">"%s"</span>, f.get()-&gt;message.c_str());
+});</code></pre>
+      <div class="box bad"><span class="tag">禁止</span><p>不要在定时器或订阅回调里 <code>async_send_request</code> 之后马上 <code>.get()</code> 或 <code>spin_until_future_complete</code>：单线程执行器腾不出手处理响应，节点直接卡死。</p></div>
+      <p>正确做法就是上面这样：给 <code>async_send_request</code> 传一个回调，响应到了执行器再调用它。</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">2.13</div>
+    <div>
+      <h3>动作：耗时任务，有进度、可取消</h3>
+<pre><code><span class="c"># GoToPoint.action：目标 / 结果 / 反馈</span>
+float64 x
+float64 y
+---
+bool    reached
+float64 total_time
+---
+float64 distance_remaining
+
+<span class="p">$</span> ros2 action send_goal /go_to_point mini_sentry_interfaces/action/GoToPoint \
+    <span class="s">"{x: 3.0, y: 2.0}"</span> --feedback
+Feedback: distance_remaining: 3.5355
+Goal finished with status: SUCCEEDED</code></pre>
+      <p>客户端三件套：<code>async_send_goal(goal, opts)</code> 发目标 → <code>feedback_callback</code> 持续收进度 → <code>result_callback</code> 收结果（SUCCEEDED / ABORTED / CANCELED）。</p>
+      <ul>
+        <li>发之前判断 <code>client_-&gt;action_server_is_ready()</code>。</li>
+        <li>半路改主意：<code>client_-&gt;async_cancel_all_goals()</code>，再发新目标（血量低要撤退就是这个场景）。</li>
+        <li>依赖 <code>rclcpp_action</code>，package.xml 和 CMake 都要加。</li>
+        <li>Nav2 对外就是一个动作 <code>/navigate_to_pose</code>，把类型换成 <code>nav2_msgs::action::NavigateToPose</code>、目标换成 <code>PoseStamped</code>，写法完全一样。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<!-- ================= Part 3 ================= -->
+<section class="part" id="p3">
+  <div class="part-hd">
+    <div class="part-no">PART 3</div>
+    <h2>参数与 launch</h2>
+    <div class="note">赛场上不改代码就能调；以及一条命令把整车拉起来。</div>
+  </div>
+
+  <div class="item">
+    <div class="idx">3.1</div>
+    <div>
+      <h3>参数：名字 + 默认值</h3>
+<pre><code>max_speed_ = declare_parameter(<span class="s">"max_speed"</span>, 2.0);  <span class="c">// 返回当前值</span></code></pre>
+<pre><code><span class="c"># mini_sentry/config/sentry.yaml</span>
+chassis_sim:              <span class="c"># 第一层：节点名</span>
+  ros__parameters:        <span class="c"># 固定写法，两个下划线</span>
+    max_speed: 2.0
+    rate: 50.0
+sentry_brain:
+  ros__parameters:
+    retreat_hp: 150</code></pre>
+      <ul>
+        <li>加载方式一：<code>ros2 run mini_sentry chassis_sim --ros-args --params-file sentry.yaml</code>。</li>
+        <li>加载方式二：命令行直接给，<code>-p max_speed:=1.0</code>。</li>
+        <li>加载方式三：launch 里 <code>parameters=[yaml 路径]</code>，比赛里最常用这个。</li>
+        <li>查看与修改：<code>ros2 param list / get / set</code>。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">3.2</div>
+    <div>
+      <h3>为什么 param set 成功了，车还是按老速度跑</h3>
+      <p>节点只在<b>构造函数</b>里读了一次参数、存进成员变量 <code>max_speed_</code>，之后不会跟着变。想在线调，必须注册参数回调。</p>
+<pre><code>OnSetParametersCallbackHandle::SharedPtr param_cb_;  <span class="c">// 句柄一销毁，回调就失效</span>
+
+param_cb_ = add_on_set_parameters_callback(
+  [<span class="k">this</span>](<span class="k">const</span> std::vector&lt;rclcpp::Parameter&gt; &amp; ps) {
+    rcl_interfaces::msg::SetParametersResult r;
+    r.successful = <span class="k">true</span>;
+    <span class="k">for</span> (<span class="k">const auto</span> &amp; p : ps) {
+      <span class="k">if</span> (p.get_name() != <span class="s">"max_speed"</span>) <span class="k">continue</span>;
+      <span class="k">if</span> (p.as_double() &lt;= 0.0) {          <span class="c">// 不合理的值可以拒绝</span>
+        r.successful = <span class="k">false</span>;
+        r.reason = <span class="s">"max_speed 必须大于 0"</span>;
+      } <span class="k">else</span> {
+        max_speed_ = p.as_double();
+      }
+    }
+    <span class="k">return</span> r;
+  });</code></pre>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:34%"><col style="width:66%"></colgroup>
+          <tr><th>yaml 的坑</th><th>症状</th></tr>
+          <tr><td>声明成 double，yaml 里写 <code>2</code></td><td>报类型错误，必须写 <code>2.0</code></td></tr>
+          <tr><td>第一层节点名写错</td><td>参数不生效，而且<b>不报错</b>——最难查的一类</td></tr>
+        </table>
+      </div>
+      <div class="box good"><span class="tag">推荐</span><p>图形界面调参：<code>ros2 run rqt_reconfigure rqt_reconfigure</code>，选节点直接改数。调好了一定要 <code>ros2 param dump /chassis_sim &gt; tuned.yaml</code> 存回去，否则重启就没了。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">3.3</div>
+    <div>
+      <h3>launch：一条命令启动一整套</h3>
+<pre><code><span class="k">def</span> generate_launch_description():
+    pkg = get_package_share_directory(<span class="s">'mini_sentry'</span>)
+    params = os.path.join(pkg, <span class="s">'config'</span>, <span class="s">'sentry.yaml'</span>)
+    <span class="k">return</span> LaunchDescription([
+        Node(package=<span class="s">'mini_sentry'</span>, executable=<span class="s">'chassis_sim'</span>, parameters=[params]),
+        Node(package=<span class="s">'mini_sentry'</span>, executable=<span class="s">'sentry_brain'</span>,
+             parameters=[params], output=<span class="s">'screen'</span>),
+        Node(package=<span class="s">'tf2_ros'</span>, executable=<span class="s">'static_transform_publisher'</span>,
+             arguments=[<span class="s">'--x'</span>, <span class="s">'0.2'</span>, <span class="s">'--y'</span>, <span class="s">'0.1'</span>, <span class="s">'--z'</span>, <span class="s">'0.4'</span>, <span class="s">'--yaw'</span>, <span class="s">'1.5708'</span>,
+                        <span class="s">'--frame-id'</span>, <span class="s">'base_link'</span>, <span class="s">'--child-frame-id'</span>, <span class="s">'livox_frame'</span>]),
+    ])</code></pre>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:30%"><col style="width:70%"></colgroup>
+          <tr><th>launch 里的常用参数</th><th>作用</th></tr>
+          <tr><td class="mono">parameters=[params]</td><td>加载 yaml 参数</td></tr>
+          <tr><td class="mono">output='screen'</td><td>日志打在这个终端里，方便看红字</td></tr>
+          <tr><td class="mono">remappings=[('cmd_vel','cmd_vel_nav')]</td><td>话题改名，接别人的包不用改他的代码</td></tr>
+          <tr><td class="mono">respawn=True, respawn_delay=1.0</td><td>崩了 1 s 自动拉起，比赛中不用人去重启</td></tr>
+          <tr><td class="mono">IncludeLaunchDescription(...)</td><td>嵌套别人的 launch，一份总 launch 套相机、识别、导航</td></tr>
+          <tr><td class="mono">parameters=[{'use_sim_time': True}]</td><td>跑仿真、回放 bag 时必须开，否则时间对不上</td></tr>
+        </table>
+      </div>
+      <div class="box warn"><span class="tag">易错</span><p>launch、yaml、rviz 文件要在 CMakeLists 里 <code>install(DIRECTORY …)</code>，否则 <code>get_package_share_directory</code> 找不到，launch 直接报错。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">3.4</div>
+    <div>
+      <h3>组件：相机和识别放进一个进程，图像不用拷贝</h3>
+      <ul>
+        <li><b>普通节点</b>：两个进程，图像要序列化 → 走 DDS → 反序列化。1280×1024×3 每帧拷贝约 <b>3.9 MB</b>。</li>
+        <li><b>组件</b>：编译成动态库的节点，由容器进程加载；同一个容器内开了<b>进程内通信</b>，消息直接传指针。</li>
+        <li>自瞄常把相机、识别、跟踪放进一个容器。</li>
+      </ul>
+<pre><code><span class="c">// 节点写成组件：构造函数收 NodeOptions，不写 main</span>
+<span class="k">class</span> Detector : <span class="k">public</span> rclcpp::Node {
+<span class="k">public</span>:
+  <span class="k">explicit</span> Detector(<span class="k">const</span> rclcpp::NodeOptions &amp; options)
+  : Node(<span class="s">"detector"</span>, options) {}
+};
+<span class="c">#include</span> <span class="s">"rclcpp_components/register_node_macro.hpp"</span>
+RCLCPP_COMPONENTS_REGISTER_NODE(Detector)
+
+<span class="c">// launch：放进同一个容器</span>
+ipc = [{<span class="s">'use_intra_process_comms'</span>: <span class="k">True</span>}]
+ComposableNodeContainer(
+    name=<span class="s">'vision'</span>, package=<span class="s">'rclcpp_components'</span>, executable=<span class="s">'component_container'</span>,
+    composable_node_descriptions=[
+        ComposableNode(package=<span class="s">'camera'</span>,   plugin=<span class="s">'CameraNode'</span>, extra_arguments=ipc),
+        ComposableNode(package=<span class="s">'detector'</span>, plugin=<span class="s">'Detector'</span>,   extra_arguments=ipc),
+    ])</code></pre>
+      <div class="box warn"><span class="tag">注意</span><p>真正零拷贝还要求发布时用 <code>std::unique_ptr</code>：<code>pub_-&gt;publish(std::move(msg))</code>。代价是：一个组件崩了，<b>整个容器都会退出</b>。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Part 4 ================= -->
+<section class="part" id="p4">
+  <div class="part-hd">
+    <div class="part-no">PART 4</div>
+    <h2>TF 坐标变换</h2>
+    <div class="note">自瞄和导航都绕不开：每个传感器在自己的坐标系里说话。</div>
+  </div>
+
+  <div class="item">
+    <div class="idx">4.1</div>
+    <div>
+      <h3>TF 是什么：车上的坐标系树</h3>
+      <p>每个传感器都在<b>自己的坐标系</b>里测量：点云在 <code>livox_frame</code>，装甲板在 <code>camera_link</code>。TF（tf2）记录所有坐标系之间的相对位置，帮你把点、位姿从一个坐标系换算到另一个。</p>
+      <p>导航要把点云换到 <code>map</code> 里规划；自瞄要把装甲板换到 <code>odom</code> 里，不跟着云台转，才好做跟踪预测。</p>
+<pre><code>map
+ └── odom                    <span class="c"># 重定位发布，修正漂移</span>
+      └── base_link          <span class="c"># 里程计发布（LIO / 轮速计）</span>
+           ├── livox_frame   <span class="c"># 静态：雷达安装位置</span>
+           ├── gimbal_yaw    <span class="c"># 动态：跟着云台角度实时发布</span>
+           │    └── gimbal_pitch
+           │         └── camera_link   <span class="c"># 静态：相机安装位置</span>
+           └── …</code></pre>
+      <div class="box plain"><span class="tag">约定</span><p>REP 103：<b>x 前、y 左、z 上</b>；单位米、弧度，逆时针为正。每个坐标系<b>只有一个父节点</b>，每条边<b>只有一个发布者</b>。</p></div>
+      <p>步兵自瞄有个更简单的画法：<code>odom → gimbal_link</code>（按云台 IMU 姿态实时发）<code>→ camera</code>。相机光学坐标系是 z 朝前、x 朝右、y 朝下，所以通常再挂一个 <code>camera_optical_frame</code>。</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">4.2</div>
+    <div>
+      <h3>map 与 odom：为什么要两层</h3>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:18%"><col style="width:41%"><col style="width:41%"></colgroup>
+          <tr><th></th><th>odom</th><th>map</th></tr>
+          <tr><td>连续性</td><td>连续，不会跳</td><td>定位修正时会跳一下</td></tr>
+          <tr><td>长期精度</td><td>越跑越漂</td><td>不漂</td></tr>
+          <tr><td>谁发</td><td>里程计（轮速计、LIO）</td><td>重定位</td></tr>
+          <tr><td>拿来做</td><td>控制、短时跟踪预测</td><td>全局目标点、规划</td></tr>
+        </table>
+      </div>
+      <div class="box good"><span class="tag">关键</span><p>定位节点发的是 <code>map → odom</code>，<b>不是</b> <code>map → base_link</code>：<code>odom → base_link</code> 已经有人发了，每条边只能有一个发布者。</p></div>
+      <p>只做自瞄、不导航的车，通常只有 <code>odom</code> 这一层。自瞄跟踪一定要用 <code>odom</code>：目标位置不能因为定位修正跳一下就乱掉。规范见 REP 105。</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">4.3</div>
+    <div>
+      <h3>发布静态 TF：传感器装在哪</h3>
+<pre><code>ros2 run tf2_ros static_transform_publisher \
+  --x 0.2 --y 0.1 --z 0.4 --yaw 1.5708 \
+  --frame-id base_link \
+  --child-frame-id livox_frame</code></pre>
+      <ul>
+        <li>平移单位米，角度单位弧度；<code>1.5708 rad = 90°</code>。launch 里写法相同。</li>
+        <li>外参量错 1°，10 m 外的点就偏 <code>10 × tan1° ≈ 0.17 m</code>；雷达倾斜安装时 roll、pitch 也要量准。</li>
+        <li>雷达、相机、云台多了，可以写进 URDF，由 <code>robot_state_publisher</code> 统一发布。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">4.4</div>
+    <div>
+      <h3>发布动态 TF：随时间变的位姿</h3>
+<pre><code>tf_broadcaster_ = std::make_unique&lt;tf2_ros::TransformBroadcaster&gt;(*<span class="k">this</span>);
+
+tf2::Quaternion q;
+q.setRPY(0, 0, yaw_);                  <span class="c">// 欧拉角 → 四元数，别手算</span>
+geometry_msgs::msg::TransformStamped tf;
+tf.header.stamp    = t;                <span class="c">// 这个位姿对应的时刻</span>
+tf.header.frame_id = <span class="s">"odom"</span>;         <span class="c">// 父</span>
+tf.child_frame_id  = <span class="s">"base_link"</span>;     <span class="c">// 子</span>
+tf.transform.translation.x = x_;
+tf.transform.translation.y = y_;
+tf.transform.rotation.z    = q.z();
+tf_broadcaster_-&gt;sendTransform(tf);</code></pre>
+      <div class="box bad"><span class="tag">禁止</span><p><b>一条边只能一个人发。</b>LIO 和仿真都发 <code>odom → base_link</code>，TF 会来回跳，RViz2 里车会闪。云台的 TF 同理：每收到一次新的云台角度就发一次。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">4.5</div>
+    <div>
+      <h3>查询 TF：把点换到另一个坐标系</h3>
+<pre><code>tf_buffer_   = std::make_unique&lt;tf2_ros::Buffer&gt;(get_clock());
+tf_listener_ = std::make_shared&lt;tf2_ros::TransformListener&gt;(*tf_buffer_);
+
+geometry_msgs::msg::PointStamped p;
+p.header.frame_id = <span class="s">"livox_frame"</span>;
+p.header.stamp    = rclcpp::Time(0);   <span class="c">// 0 = 用最新的变换</span>
+p.point.x = 2.0;
+<span class="k">try</span> {
+  <span class="k">auto</span> in_base = tf_buffer_-&gt;transform(p, <span class="s">"base_link"</span>);
+  <span class="k">auto</span> in_odom = tf_buffer_-&gt;transform(p, <span class="s">"odom"</span>);
+} <span class="k">catch</span> (<span class="k">const</span> tf2::TransformException &amp; ex) {
+  RCLCPP_WARN(get_logger(), <span class="s">"%s"</span>, ex.what());
+}</code></pre>
+      <ul>
+        <li>Buffer 记住最近一段时间的所有 TF，可以查任意两个坐标系的关系，中间隔几层都行。</li>
+        <li>查询<b>一定会失败</b>（还没收到、树断了），所以必须 try / catch。</li>
+        <li>讲义示例：车在 (3, 1)、车头朝 +x 时，雷达说「x 方向 2 m」（雷达侧装、x 朝车的左边），对底盘是左边 2.1 m，对场地是 (3.2, 3.1)。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">4.6</div>
+    <div>
+      <h3>按时间查 TF：拍照那一刻，云台在哪</h3>
+      <p>识别一帧要十几毫秒，这期间云台一直在转。用「现在」的 TF 去换算，等于用错姿态。必须用<b>图像的时间戳</b>查，Buffer 会在前后两条 TF 之间插值。</p>
+<pre><code><span class="k">auto</span> tf = tf_buffer_-&gt;lookupTransform(
+    <span class="s">"odom"</span>, msg-&gt;header.frame_id,          <span class="c">// 目标系、源系</span>
+    msg-&gt;header.stamp,                     <span class="c">// 拍照那一刻</span>
+    rclcpp::Duration::from_seconds(0.02)); <span class="c">// 最多等 20 ms</span>
+
+geometry_msgs::msg::PoseStamped in_odom;
+tf2::doTransform(armor_in_cam, in_odom, tf);</code></pre>
+      <ul>
+        <li>时间戳 0 = 用最新变换；自瞄用图像时间戳。</li>
+        <li>Buffer 默认只存最近 <b>10 s</b> 的 TF，太老的时间戳也查不到。</li>
+        <li>t₀ 比最新 TF 还新 → <code>extrapolation into the future</code>，要么给等待时间，要么检查发 TF 的节点。</li>
+        <li>等待会占住回调；不想阻塞就用 <code>tf2_ros::MessageFilter</code>：TF 到齐了才把图像交给回调。</li>
+        <li>前提是云台 TF 的时间戳打得准：用<b>收到这帧云台数据的时刻</b>，不是随手写 <code>now()</code> 或 0。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">4.7</div>
+    <div>
+      <h3>TF 出问题：先看树，再看数</h3>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:30%"><col style="width:52%"><col style="width:18%"></colgroup>
+          <tr><th>工具 / 报错</th><th>原因</th><th>怎么查</th></tr>
+          <tr><td class="mono">ros2 run tf2_tools view_frames</td><td>生成 frames.pdf，看树是否完整、每段谁发、多少 Hz</td><td>看树</td></tr>
+          <tr><td class="mono">ros2 run tf2_ros tf2_echo base_link livox_frame</td><td>打印两坐标系的平移与 RPY，核对外参</td><td>看数</td></tr>
+          <tr><td class="mono">not part of the same tree</td><td>树断了：某段没人发，比如重定位没启动，缺 map → odom</td><td>view_frames</td></tr>
+          <tr><td class="mono">extrapolation into the future</td><td>数据时间戳比最新 TF 还新：TF 发得慢、两台电脑时间不同步、use_sim_time 没统一</td><td>tf2_echo + 对时间</td></tr>
+          <tr><td class="mono">target_frame does not exist</td><td>坐标系名字拼错，或多了开头的 <code>/</code></td><td>对名字</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ================= Part 5 ================= -->
+<section class="part" id="p5">
+  <div class="part-hd">
+    <div class="part-no">PART 5</div>
+    <h2>调试工具</h2>
+    <div class="note">把数据画出来、把日志读懂、把现场录下来。</div>
+  </div>
+
+  <div class="item">
+    <div class="idx">5.1</div>
+    <div>
+      <h3>RViz2：把数据画出来</h3>
+      <ul>
+        <li><b>Fixed Frame</b> 必须是 TF 树里真实存在的坐标系（比如 <code>odom</code>），否则什么都不显示。</li>
+        <li>点云不显示：把该 Display 的 <b>Reliability</b> 改成 <b>Best Effort</b>；再检查它的 <code>frame_id</code> 在不在 TF 树里。</li>
+        <li>看图像：Add → <b>Image</b>，或者直接 <code>rqt_image_view</code>。</li>
+        <li>配好后 Ctrl+S 存成 <code>.rviz</code>，launch 里用 <code>-d</code> 加载，全队统一视角。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">5.2</div>
+    <div>
+      <h3>rqt_graph：哪条线断了一眼看出</h3>
+      <p>把节点和话题连成一张图。发布者在 <code>/cmd_vel_nav</code>、订阅者在 <code>/cmd_vel</code> 时，名字对不上，ROS <b>不报错</b>，只会安静地没有数据——这种问题只有图能看出来。</p>
+      <div class="box plain"><span class="tag">排查</span><p>看到两个孤立的点、中间没有线，就是话题名、命名空间或 remapping 对不上。</p></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">5.3</div>
+    <div>
+      <h3>日志：四个级别 + 限频 + 只打一次</h3>
+<pre><code>RCLCPP_DEBUG(get_logger(), <span class="s">"检测到 %zu 个装甲板"</span>, armors.size());
+RCLCPP_INFO (get_logger(), <span class="s">"相机已连接"</span>);
+RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 1000, <span class="s">"相机掉帧"</span>); <span class="c">// 每 1000 ms 最多一次</span>
+RCLCPP_ERROR_ONCE  (get_logger(), <span class="s">"标定文件读取失败"</span>);          <span class="c">// 只打一次</span></code></pre>
+      <ul>
+        <li>运行时改级别：<code>ros2 run my_pkg detector --ros-args --log-level detector:=debug</code>。</li>
+        <li>高频回调里别打 INFO，会刷屏还拖慢节点；用 DEBUG 或 THROTTLE。</li>
+        <li>日志另外存在 <code>~/.ros/log/</code>，比赛后可以回去翻。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">5.4</div>
+    <div>
+      <h3>rqt 五件套</h3>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:32%"><col style="width:68%"></colgroup>
+          <tr><th>工具</th><th>干什么</th></tr>
+          <tr><td class="mono">rqt_console</td><td>按节点、级别过滤日志</td></tr>
+          <tr><td class="mono">rqt_plot</td><td>把数值画成曲线：速度、云台角度跟没跟上</td></tr>
+          <tr><td class="mono">rqt_reconfigure</td><td>图形界面改参数</td></tr>
+          <tr><td class="mono">rqt_image_view</td><td>看图像话题</td></tr>
+          <tr><td class="mono">rqt_graph</td><td>节点和话题的连线图</td></tr>
+        </table>
+      </div>
+      <p>启动方式都是 <code>ros2 run &lt;同名包&gt; &lt;同名程序&gt;</code>；直接敲 <code>rqt</code> 能把它们装进一个窗口。画曲线时字段用斜杠拼：<code>ros2 run rqt_plot rqt_plot /odom/twist/twist/linear/x</code>。</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">5.5</div>
+    <div>
+      <h3>ros2 bag：录下来，带回去复现</h3>
+<pre><code><span class="c"># 录：只录原始数据和 TF</span>
+ros2 bag record -o match01 /livox/lidar /livox/imu /tf /tf_static /odom /cmd_vel /game_status
+
+<span class="c"># 看：时长、话题、条数</span>
+ros2 bag info match01
+
+<span class="c"># 放：按录包时的时间（所有节点都要开 use_sim_time）</span>
+ros2 bag play match01 --clock</code></pre>
+      <ul>
+        <li>最有用的三个场景：现场出问题回去<b>原样复现</b>；改算法用<b>同一份数据</b>对比前后；没有车的人也能调识别、定位。</li>
+        <li>录<b>原始数据</b>，算法输出回放时重新算，否则对比没有意义。</li>
+        <li>图像很占硬盘：1280×1024 彩色约 3.9 MB/帧，100 帧/秒一分钟约 <b>23 GB</b>。</li>
+        <li>Humble 默认存 sqlite3（<code>.db3</code>），Jazzy 起默认 MCAP。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="idx">5.6</div>
+    <div>
+      <h3>排查清单：六个问题，六条路径</h3>
+      <div class="tw">
+        <table>
+          <colgroup><col style="width:8%"><col style="width:24%"><col style="width:68%"></colgroup>
+          <tr><th>#</th><th>现象</th><th>按顺序做</th></tr>
+          <tr><td>1</td><td>没数据</td><td><code>topic list</code> 有没有 → <code>hz</code> 有没有频率 → <code>info -v</code> 看 QoS → 查 DOMAIN_ID</td></tr>
+          <tr><td>2</td><td>数据不对</td><td><code>echo</code> 看数值、单位、正负号 → frame_id 对不对</td></tr>
+          <tr><td>3</td><td>TF 报错</td><td><code>view_frames</code> 看树是否完整 → <code>tf2_echo</code> 看数值和频率</td></tr>
+          <tr><td>4</td><td>节点没起来 / 崩了</td><td>翻 launch 终端里第一条红字 → <code>node list</code> → 单独 <code>ros2 run</code> 复现</td></tr>
+          <tr><td>5</td><td>连不上</td><td><code>rqt_graph</code> → 话题名、命名空间、remapping 对不对</td></tr>
+          <tr><td>6</td><td>偶发问题</td><td>能录就录：<code>ros2 bag record</code>，回来反复回放</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 命令速查 ================= -->
+<section class="part" id="cmd">
+  <div class="part-hd">
+    <div class="part-no">CHEAT SHEET</div>
+    <h2>命令速查</h2>
+    <div class="note">按 Tab 自动补全：包名、程序名、话题名、消息类型都能补。</div>
+  </div>
+  <div class="cmdgrid">
+    <div class="tw">
+      <table>
+        <colgroup><col style="width:58%"><col style="width:42%"></colgroup>
+        <tr><th>命令</th><th>作用</th></tr>
+        <tr><td class="mono">ros2 run &lt;包&gt; &lt;程序&gt;</td><td>运行一个节点</td></tr>
+        <tr><td class="mono">ros2 launch &lt;包&gt; &lt;文件&gt;</td><td>按 launch 启动一组</td></tr>
+        <tr><td class="mono">ros2 node list / info</td><td>有哪些节点、各自收发什么</td></tr>
+        <tr><td class="mono">ros2 topic list</td><td>有哪些话题</td></tr>
+        <tr><td class="mono">ros2 topic echo</td><td>打印消息内容</td></tr>
+        <tr><td class="mono">ros2 topic hz</td><td>测发布频率</td></tr>
+        <tr><td class="mono">ros2 topic info -v</td><td>类型、收发者、QoS</td></tr>
+        <tr><td class="mono">ros2 topic pub</td><td>手动发消息</td></tr>
+        <tr><td class="mono">ros2 interface show</td><td>看消息的字段定义</td></tr>
+      </table>
+    </div>
+    <div class="tw">
+      <table>
+        <colgroup><col style="width:58%"><col style="width:42%"></colgroup>
+        <tr><th>命令</th><th>作用</th></tr>
+        <tr><td class="mono">ros2 service list / call</td><td>查看、调用服务</td></tr>
+        <tr><td class="mono">ros2 action list / send_goal</td><td>查看、发送动作目标</td></tr>
+        <tr><td class="mono">ros2 param list / get / set</td><td>查看、修改参数</td></tr>
+        <tr><td class="mono">ros2 param dump &lt;节点&gt;</td><td>导出参数到 yaml</td></tr>
+        <tr><td class="mono">ros2 bag record / play</td><td>录制、回放</td></tr>
+        <tr><td class="mono">ros2 pkg executables &lt;包&gt;</td><td>包里有哪些程序</td></tr>
+        <tr><td class="mono">ros2 doctor</td><td>检查环境</td></tr>
+        <tr><td class="mono">colcon build</td><td>编译（在工作空间根目录）</td></tr>
+        <tr><td class="mono">source install/setup.bash</td><td>让终端找到新包</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 易错点 ================= -->
+<section class="part" id="err">
+  <div class="part-hd">
+    <div class="part-no">PITFALLS</div>
+    <h2>七个最容易踩的坑</h2>
+    <div class="note">每条都对应本课里一个真实失败现象。</div>
+  </div>
+  <div class="tw">
+    <table>
+      <colgroup><col style="width:6%"><col style="width:44%"><col style="width:50%"></colgroup>
+      <tr><th>#</th><th>症状</th><th>根因与做法</th></tr>
+      <tr><td>1</td><td>新终端敲 <code>ros2</code> 就 command not found</td><td>没 source。先系统再工作空间，且只对当前终端有效</td></tr>
+      <tr><td>2</td><td>车自己动，或收到别人的 <code>/cmd_vel</code></td><td>DOMAIN_ID 撞车。每人一个 0～101 的号</td></tr>
+      <tr><td>3</td><td><code>hz</code> 有数据，回调一次没进</td><td>QoS 不兼容：订阅者要求高于发布者。传感器用 <code>SensorDataQoS()</code></td></tr>
+      <tr><td>4</td><td>改了参数，行为没变</td><td>只在构造函数读了一次。加 <code>add_on_set_parameters_callback</code></td></tr>
+      <tr><td>5</td><td>节点莫名卡死，所有回调都不动</td><td>回调里同步等待或 sleep。改异步回调，别占住执行器</td></tr>
+      <tr><td>6</td><td>RViz2 里车在闪、TF 来回跳</td><td>同一条边两个人发。保证每条边只有一个发布者</td></tr>
+      <tr><td>7</td><td>识别框偏、跟踪抖</td><td>用「现在」的 TF 换算图像。要用图像时间戳查 TF</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ================= 自测 ================= -->
+<section class="part" id="test">
+  <div class="part-hd">
+    <div class="part-no">SELF CHECK</div>
+    <h2>十道自测</h2>
+    <div class="note">能答上来，这一课就算过关；答不上来的回去翻对应小节。</div>
+  </div>
+  <ol class="qlist">
+    <li>为什么 source 完还要再 source 一次工作空间？顺序反了会怎样？</li>
+    <li>改了 launch 文件，用 <code>--symlink-install</code> 编译过，还需要重新 build 吗？</li>
+    <li>新写了一个 .cpp 节点，编译通过但 <code>ros2 run</code> 说 No executable found，漏了哪一步？</li>
+    <li>发布者 BEST_EFFORT、订阅者 RELIABLE，为什么连不上？反过来呢？</li>
+    <li>为什么 <code>ros2 topic hz</code> 能收到，自己写的节点却收不到？</li>
+    <li>静态 TF 只发一次，为什么后打开的 RViz2 还能看到？</li>
+    <li>定位节点为什么发 <code>map → odom</code> 而不是 <code>map → base_link</code>？</li>
+    <li>图像回调里查询 TF，时间戳为什么不能用 <code>now()</code>？</li>
+    <li>参数 set 成功了但车没变，代码里缺了什么？</li>
+    <li>一条命令启动整车、崩了自动重启，分别靠 launch 的哪个写法？</li>
+  </ol>
+</section>
+
+<footer>
+  <span>整理自《算法组 · ROS 2 基础》讲义</span>
+  <span>ROS 2 Humble · Ubuntu 22.04 · mini_sentry</span>
+</footer>
+</main>
+</div>
+
+<script>
+(function () {
+  try {
+    var links = Array.prototype.slice.call(document.querySelectorAll('#nav a'));
+    var targets = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+    if (!('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = targets.indexOf(e.target);
+        if (i < 0) return;
+        links.forEach(function (a, k) { a.classList.toggle('on', k === i); });
+      });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    targets.forEach(function (t) { if (t) obs.observe(t); });
+  } catch (err) {}
+}());
+</script>
+</body>
+</html>

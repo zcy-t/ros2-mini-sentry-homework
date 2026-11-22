@@ -1,0 +1,9 @@
+# 切换哨兵行为模式
+uint8 PATROL=1        # 巡逻
+uint8 HOLD=2          # 原地待命
+uint8 RETREAT=3       # 回补给点
+
+uint8 mode
+---
+bool   success
+string message
