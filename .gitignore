@@ -1,0 +1,21 @@
+# build / install / log 产物（colcon 生成）
+build/
+install/
+log/
+
+# rosbag2 录制目录
+bag/
+*.db3
+*.mcap
+*.yaml.active
+
+# Python
+__pycache__/
+*.pyc
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 运行产物
+*.log
